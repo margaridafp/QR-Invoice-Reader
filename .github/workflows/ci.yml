@@ -1,0 +1,44 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: self-hosted
+    container: node:15.5.1-alpine3.10
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # See: https://github.com/actions/cache/blob/main/examples.md#node---yarn
+    - name: Get Yarn cache directory
+      id: yarn-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+
+    - name: Use Yarn cache
+      uses: actions/cache@v2
+      id: yarn-cache
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+
+    # `--prefer-offline` gives cache priority
+    # tar package is needed for caching since actions/cache needs non-busybox version
+    - name: Install dependencies
+      run: |
+        apk add --no-cache git tar
+        yarn install --prefer-offline --frozen-lockfile
+    - name: Build
+      run: yarn build
+    - name: Upload build
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-package
+        path: |
+          build
+        retention-days: 5
+        if-no-files-found: error
