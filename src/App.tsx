@@ -1,8 +1,14 @@
+import {ThemeProvider} from '@material-ui/core/styles';
 import React from 'react';
+
+import {theme} from './constants';
+import Scan from './Scan';
 
 function App(): JSX.Element {
   return (
-    <h1>This is my React app!</h1>
+    <ThemeProvider theme={theme}>
+      <Scan />
+    </ThemeProvider>
   );
 }
 
