@@ -60,7 +60,9 @@ function CameraCard(props: Props): JSX.Element {
       }, () => '', 300);
       qrScanner.start();
 
+      // @ts-ignore: canvas exist on QrScanner
       cameraRef?.current?.parentNode?.insertBefore(qrScanner.$canvas, cameraRef?.current?.nextSibling);
+      // @ts-ignore: canvas exist on QrScanner
       qrScanner.$canvas.style.transform = 'scaleX(-1)';
     }
   }, [cameraRef]);
