@@ -38,6 +38,7 @@ module.exports = {
     'sort-imports': 'off',
     'import/order': 'off',
     'valid-jsdoc': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
   },
 
 };

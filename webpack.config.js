@@ -44,6 +44,12 @@ module.exports = {
     contentBase: path.join(__dirname, 'build'),
     port: 3000,
     open: true,
+    stats: 'errors-only',
+    overlay: {
+      warnings: true,
+      errors: true,
+    },
+    noInfo: true,
   },
   // add a custom index.html as the template
   plugins: [

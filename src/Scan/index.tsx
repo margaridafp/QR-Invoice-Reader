@@ -14,19 +14,16 @@ const useStyles = makeStyles({
   },
 });
 
-function Scan(): JSX.Element {
-  const classes = useStyles();
+type Props = {
+  onGetResponse: (response: string) => void
+}
 
-  // Get QR response
-  const [qrResponse, setQrResponse] = React.useState('');
-  const onGetResponse = React.useCallback((response: string) => {
-    setQrResponse(response);
-  }, []);
+function Scan(props: Props): JSX.Element {
+  const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <CameraCard onGetResponse={onGetResponse}/>
-      {qrResponse && <div>{qrResponse}</div>}
+      <CameraCard onGetResponse={props.onGetResponse}/>
     </div>
   );
 }
