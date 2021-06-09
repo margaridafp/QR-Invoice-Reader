@@ -1,9 +1,10 @@
 import {ThemeProvider} from '@material-ui/core/styles';
 import React from 'react';
 
+import LanguageSelector from './components/LanguageSelector';
 import {theme} from './constants';
-import Result from './Result';
-import Scan from './Scan';
+import Result from './screens/Result';
+import Scan from './screens/Scan';
 
 function App(): JSX.Element {
   const [codeResponse, setCodeResponse] = React.useState<string|null>(null);
@@ -14,6 +15,7 @@ function App(): JSX.Element {
 
   return (
     <ThemeProvider theme={theme}>
+      <LanguageSelector />
       {!codeResponse ?
       <Scan onGetResponse={onGetResponse}/> :
       <Result response={codeResponse} onGetResponse={onGetResponse} />}
