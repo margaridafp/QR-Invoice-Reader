@@ -1,4 +1,5 @@
 import {createMuiTheme} from '@material-ui/core';
+import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
 
 export const colors = {
   darkgreen: '#39603D',
@@ -7,7 +8,20 @@ export const colors = {
   lightgrey: '#DADED4',
 };
 
+const breakpointValues= {
+  xs: 0,
+  sm: 600,
+  md: 960,
+  lg: 1280,
+  xl: 1920,
+};
+
+const breakpoints = createBreakpoints({values: breakpointValues});
+
 export const theme = createMuiTheme({
+  breakpoints: {
+    values: breakpointValues,
+  },
   palette: {
     primary: {
       main: colors.darkgrey,
@@ -16,93 +30,33 @@ export const theme = createMuiTheme({
       main: colors.lightblue,
     },
   },
+  typography: {
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+    caption: {
+      [breakpoints.up('xs')]: {
+        fontSize: '12px'},
+      [breakpoints.up('md')]: {
+        fontSize: '13px'},
+      [breakpoints.up('xl')]: {
+        fontSize: '15px'},
+      color: colors.darkgrey,
+      lineHeight: '1.5',
+    },
+  },
 })
   ;
 
-export type Values = {
-  A: string,
-  B: string,
-  C: string,
-  D: string,
-  E: string,
-  F: string,
-  G: string,
-  H: string,
-  I1: string,
-  I2?: string,
-  I3?: string,
-  I4?: string,
-  I5?: string,
-  I6?: string,
-  I7?: string,
-  I8?: string,
-  J1?: string,
-  J2?: string,
-  J3?: string,
-  J4?: string,
-  J5?: string,
-  J6?: string,
-  J7?: string,
-  J8?: string,
-  K1?: string,
-  K2?: string,
-  K3?: string,
-  K4?: string,
-  K5?: string,
-  K6?: string,
-  K7?: string,
-  K8?: string,
-  L?: string,
-  M?: string,
-  N: string,
-  O: string,
-  P?: string,
-  Q: string,
-  R: string,
-  S?: string
-  separator: string,
-}
-
 export const keys = {
   separator: '*',
-  A: 'NIF do emitente',
-  B: 'NIF do adquirente',
-  C: 'País do adquirente',
-  D: 'Tipo de documento',
-  E: 'Estado do documento',
-  F: 'Data do documento',
-  G: 'Identificação única do documento',
-  H: 'ATCUD',
-  I1: 'Espaço fiscal',
-  I2: 'Base tributável isenta de IVA',
-  I3: 'Base tributável de IVA à taxa reduzida',
-  I4: 'Total de IVA à taxa reduzida',
-  I5: 'Base tributável de IVA à taxa intermédia',
-  I6: 'Total de IVA à taxa intermédia',
-  I7: 'Base tributável de IVA à taxa normal',
-  I8: 'Total de IVA à taxa normal',
-  J1: 'Espaço fiscal',
-  J2: 'Base tributável isenta de IVA',
-  J3: 'Base tributável de IVA à taxa reduzida',
-  J4: 'Total de IVA à taxa reduzida',
-  J5: 'Base tributável de IVA à taxa intermédia',
-  J6: 'Total de IVA à taxa intermédia',
-  J7: 'Base tributável de IVA à taxa normal',
-  J8: 'Total de IVA à taxa normal',
-  K1: 'Espaço fiscal',
-  K2: 'Base tributável isenta de IVA',
-  K3: 'Base tributável de IVA à taxa reduzida',
-  K4: 'Total de IVA à taxa reduzida',
-  K5: 'Base tributável de IVA à taxa intermédia',
-  K6: 'Total de IVA à taxa intermédia',
-  K7: 'Base tributável de IVA à taxa normal',
-  K8: 'Total de IVA à taxa normal',
-  L: 'Não sujeito/ não tributável em IVA/ outras situações',
-  M: 'Imposto do Selo',
-  N: 'Total de impostos',
-  O: 'Total do documento com impostos',
-  P: 'Retenções na fonte',
-  Q: '4 carateres do Hash',
-  R: 'Nº do certificado',
-  S: 'Outras informações',
 };
