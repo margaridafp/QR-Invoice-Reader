@@ -5,7 +5,7 @@
     "D": "Document type",
     "E": "Document status",
     "F": "Document date",
-    "G": "Document identification (Invoice, Document or Payment ref. number)",
+    "G": "Document identification number",
     "H": "Document unique identification (ATCUD)",
     "I1": "Tax country region",
     "I2": "Taxable base VAT free",
@@ -38,5 +38,7 @@
     "P": "Withholding Tax Amount",
     "Q": "4 characters Hash",
     "R": "Software Certificate Number",
-    "S": "Other information"
+    "S": "Other information",
+    "Start scanning": "Start scanning",
+    "Back":"Back"
 }
