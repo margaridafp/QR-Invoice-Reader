@@ -50,8 +50,10 @@ module.exports = {
   },
   devServer: {
     contentBase: path.join(__dirname, 'build'),
+    host: '0.0.0.0',
     port: 3000,
     open: true,
+    openPage: 'http://localhost:3000',
     stats: 'errors-only',
     overlay: {
       warnings: true,
