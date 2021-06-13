@@ -16,3 +16,6 @@ yarn-error.log*
 
 # production
 /build
+
+/ios
+/android

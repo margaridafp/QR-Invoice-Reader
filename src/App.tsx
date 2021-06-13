@@ -1,5 +1,5 @@
 import {ThemeProvider} from '@material-ui/core/styles';
-import React from 'react';
+import React, {Suspense} from 'react';
 
 import LanguageSelector from './components/LanguageSelector';
 import {theme} from './constants';
@@ -14,12 +14,14 @@ function App(): JSX.Element {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <LanguageSelector />
-      {!codeResponse ?
+    <Suspense fallback="loading...">
+      <ThemeProvider theme={theme}>
+        <LanguageSelector />
+        {!codeResponse ?
       <Scan onGetResponse={onGetResponse}/> :
       <Result response={codeResponse} onGetResponse={onGetResponse} />}
-    </ThemeProvider>
+      </ThemeProvider>
+    </Suspense>
   );
 }
 

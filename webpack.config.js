@@ -50,8 +50,15 @@ module.exports = {
   },
   devServer: {
     contentBase: path.join(__dirname, 'build'),
+    disableHostCheck: true,
+    compress: true,
+    clientLogLevel: 'none',
+    injectClient: false,
+    host: '0.0.0.0',
+    allowedHosts: ['192.168.1.93'],
     port: 3000,
     open: true,
+    openPage: 'http://localhost:3000',
     stats: 'errors-only',
     overlay: {
       warnings: true,
