@@ -4,13 +4,11 @@ import {makeStyles} from '@material-ui/core';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import QrScanner from 'qr-scanner';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
+
+import {styles} from '../styles';
 
 const useStyles = makeStyles(()=> ({
-  card: {
-    backgroundColor: 'white',
-    borderRadius: '0px',
-    width: 'fit-content',
-  },
   borders: {
     margin: '0px 1em 1em 1em',
     padding: '0.5em',
@@ -44,8 +42,10 @@ type Props = {
 
 function CameraCard(props: Props): JSX.Element {
   const classes = useStyles();
+  const mainClasses = styles();
   const cameraRef = React.useRef<HTMLVideoElement>(null);
   const [qrResponse, setQrResponse] = React.useState('');
+  const {t} = useTranslation();
 
   // Get response
   React.useEffect(()=>{
@@ -68,20 +68,19 @@ function CameraCard(props: Props): JSX.Element {
   }, [cameraRef]);
 
   return (
-    <>
-      <Card className={classes.card}>
-        <CardContent className={classes.content}>
-          <PhotoCameraIcon />
-          <Typography variant='body1' color="primary" gutterBottom>
-          Start Scanning
-          </Typography>
-        </CardContent>
-        <div className={classes.borders}>
-          <CardMedia component='video'ref={cameraRef} className={classes.video} />
-        </div>
-      </Card>
-    </>
+    <Card className={mainClasses.card}>
+      <CardContent className={classes.content}>
+        <PhotoCameraIcon />
+        <Typography variant='body1' color="primary" gutterBottom>
+          {t('Start scanning')}
+        </Typography>
+      </CardContent>
+      <div className={classes.borders}>
+        <CardMedia component='video'ref={cameraRef} className={classes.video} />
+      </div>
+    </Card>
   );
 }
 
 export default CameraCard;
+

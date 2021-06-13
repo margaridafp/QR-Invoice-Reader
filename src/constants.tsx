@@ -1,6 +1,13 @@
 import {createMuiTheme} from '@material-ui/core';
 import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
 
+export const fontsConfig = {
+  family: 'Arial',
+  regular: 400,
+  bold: 700,
+  medium: 500,
+};
+
 export const colors = {
   darkgreen: '#39603D',
   lightblue: '#A3BCB6',
@@ -31,18 +38,6 @@ export const theme = createMuiTheme({
     },
   },
   typography: {
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
     caption: {
       [breakpoints.up('xs')]: {
         fontSize: '12px'},
@@ -52,6 +47,17 @@ export const theme = createMuiTheme({
         fontSize: '15px'},
       color: colors.darkgrey,
       lineHeight: '1.5',
+      fontFamily: fontsConfig.family,
+      fontWeight: fontsConfig.regular,
+    },
+    body1: {
+      fontFamily: fontsConfig.family,
+      fontWeight: fontsConfig.medium,
+    },
+    subtitle1: {
+      fontFamily: fontsConfig.family,
+      fontWeight: fontsConfig.bold,
+      color: colors.darkgrey,
     },
   },
 })
