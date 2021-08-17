@@ -1,6 +1,7 @@
 /* eslint-disable no-multi-str */
 import {Card, CardContent, CardMedia, Typography} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core';
+import FlipCameraIosIcon from '@material-ui/icons/FlipCameraIos';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import QrScanner from 'qr-scanner';
 import React from 'react';
@@ -8,12 +9,12 @@ import {useTranslation} from 'react-i18next';
 
 import {styles} from '../styles';
 
-const useStyles = makeStyles(()=> ({
+const useStyles = makeStyles(() => ({
   borders: {
     margin: '0px 1em 1em 1em',
     padding: '0.5em',
     background:
-    'linear-gradient(to right, #3C403D 4px, transparent 4px) 0 0,\
+      'linear-gradient(to right, #3C403D 4px, transparent 4px) 0 0,\
     linear-gradient(to right, #3C403D 4px, transparent 4px) 0 100%,\
     linear-gradient(to left, #3C403D 4px, transparent 4px) 100% 0,\
     linear-gradient(to left, #3C403D 4px, transparent 4px) 100% 100%,\
@@ -23,6 +24,7 @@ const useStyles = makeStyles(()=> ({
     linear-gradient(to top, #3C403D 4px, transparent 4px) 100% 100%',
     backgroundRepeat: 'no-repeat',
     backgroundSize: '20px 20px',
+    position: 'relative',
   },
   video: {
     width: '100%',
@@ -33,6 +35,12 @@ const useStyles = makeStyles(()=> ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  cameraFlip: {
+    color: 'white',
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
   },
 }));
 
@@ -45,27 +53,53 @@ function CameraCard(props: Props): JSX.Element {
   const mainClasses = styles();
   const cameraRef = React.useRef<HTMLVideoElement>(null);
   const [qrResponse, setQrResponse] = React.useState('');
+  const [qrScanner, setQrScanner] = React.useState<QrScanner | null>(null);
+  const [facingMode, setFacingMode] = React.useState<'environment' | 'user'>('environment');
+  const [availableCameras, setAvailableCameras] = React.useState<QrScanner.Camera[] | never[]>([]);
   const {t} = useTranslation();
 
   // Get response
-  React.useEffect(()=>{
+  React.useEffect(() => {
     props.onGetResponse(qrResponse);
-  }, [qrResponse, props]);
+    if (qrScanner) {
+      qrScanner.stop();
+    }
+  }, [qrResponse, props, qrScanner]);
 
-  React.useEffect(()=> {
+  // Set Scanner
+  React.useEffect(() => {
     if (cameraRef.current) {
-      const qrScanner = new QrScanner(cameraRef.current, (result) => {
+      setQrScanner(new QrScanner(cameraRef.current, (result) => {
         setQrResponse(result);
-        qrScanner.stop();
-      }, () => '', 300);
-      qrScanner.start();
+      }, () => '', 300));
+    }
+  }, [cameraRef]);
 
-      // @ts-ignore: canvas exist on QrScanner
-      cameraRef?.current?.parentNode?.insertBefore(qrScanner.$canvas, cameraRef?.current?.nextSibling);
+  // Start Scanner
+  React.useEffect(() => {
+    if (!qrScanner) return;
+    qrScanner.start().then(() => {
+      QrScanner.listCameras(false).then(((cameras) => setAvailableCameras(cameras)));
+    });
+
+    // @ts-ignore: canvas exist on QrScanner
+    cameraRef?.current?.parentNode?.insertBefore(qrScanner.$canvas, cameraRef?.current?.nextSibling);
+    // @ts-ignore: canvas exist on QrScanner
+    // qrScanner.$canvas.style.transform = 'scaleX(-1)';
+  }, [qrScanner]);
+
+  const handleClick = React.useCallback(() => {
+    if (!qrScanner) return;
+    const newFacingMode = facingMode === 'environment' ? 'user' : 'environment';
+
+    if (newFacingMode === 'user') {
       // @ts-ignore: canvas exist on QrScanner
       qrScanner.$canvas.style.transform = 'scaleX(-1)';
     }
-  }, [cameraRef]);
+
+    qrScanner.setCamera(newFacingMode);
+    setFacingMode(newFacingMode);
+  }, [facingMode, qrScanner]);
 
   return (
     <Card className={mainClasses.card}>
@@ -76,7 +110,9 @@ function CameraCard(props: Props): JSX.Element {
         </Typography>
       </CardContent>
       <div className={classes.borders}>
-        <CardMedia component='video'ref={cameraRef} className={classes.video} />
+        <CardMedia component='video' ref={cameraRef} className={classes.video} />
+        {availableCameras.length > 0 &&
+          <FlipCameraIosIcon onClick={handleClick} className={classes.cameraFlip} />}
       </div>
     </Card>
   );
