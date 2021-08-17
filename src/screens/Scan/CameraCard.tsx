@@ -7,6 +7,9 @@ import QrScanner from 'qr-scanner';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 
+// @ts-ignore: implicit any
+import QrScannerWorkerPath from '!!file-loader!../../../node_modules/qr-scanner/qr-scanner-worker.min.js';
+
 import {styles} from '../styles';
 
 const useStyles = makeStyles(() => ({
@@ -58,6 +61,8 @@ function CameraCard(props: Props): JSX.Element {
   const [availableCameras, setAvailableCameras] = React.useState<QrScanner.Camera[] | never[]>([]);
   const {t} = useTranslation();
 
+  QrScanner.WORKER_PATH = QrScannerWorkerPath;
+
   // Get response
   React.useEffect(() => {
     props.onGetResponse(qrResponse);
@@ -68,10 +73,23 @@ function CameraCard(props: Props): JSX.Element {
 
   // Set Scanner
   React.useEffect(() => {
-    if (cameraRef.current) {
-      setQrScanner(new QrScanner(cameraRef.current, (result) => {
+    const video = cameraRef.current;
+    if (video) {
+      setQrScanner(new QrScanner(video, (result) => {
         setQrResponse(result);
-      }, () => '', 300));
+      }, () => '', (video) => {
+        const smallestDimension = Math.min(video.videoWidth, video.videoHeight);
+        const scanRegionSize = Math.round(2 / 3 * smallestDimension);
+        return {
+          x: Math.round((video.videoWidth - scanRegionSize) / 2),
+          y: Math.round((video.videoHeight - scanRegionSize) / 2),
+          width: scanRegionSize,
+          height: scanRegionSize,
+          downScaledWidth: 300,
+          downScaledHeight: 300,
+        };
+      },
+      ));
     }
   }, [cameraRef]);
 
@@ -84,8 +102,9 @@ function CameraCard(props: Props): JSX.Element {
 
     // @ts-ignore: canvas exist on QrScanner
     cameraRef?.current?.parentNode?.insertBefore(qrScanner.$canvas, cameraRef?.current?.nextSibling);
+
     // @ts-ignore: canvas exist on QrScanner
-    // qrScanner.$canvas.style.transform = 'scaleX(-1)';
+    qrScanner.$canvas.style.transform = 'scaleX(-1)';
   }, [qrScanner]);
 
   const handleClick = React.useCallback(() => {
