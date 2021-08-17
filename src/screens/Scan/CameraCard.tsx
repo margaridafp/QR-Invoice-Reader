@@ -12,7 +12,6 @@ import {styles} from '../styles';
 const useStyles = makeStyles(() => ({
   borders: {
     margin: '0px 1em 1em 1em',
-    padding: '0.5em',
     background:
       'linear-gradient(to right, #3C403D 4px, transparent 4px) 0 0,\
     linear-gradient(to right, #3C403D 4px, transparent 4px) 0 100%,\
@@ -25,6 +24,11 @@ const useStyles = makeStyles(() => ({
     backgroundRepeat: 'no-repeat',
     backgroundSize: '20px 20px',
     position: 'relative',
+    height: '319px',
+    width: '316px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   video: {
     width: '100%',
@@ -84,8 +88,6 @@ function CameraCard(props: Props): JSX.Element {
 
     // @ts-ignore: canvas exist on QrScanner
     cameraRef?.current?.parentNode?.insertBefore(qrScanner.$canvas, cameraRef?.current?.nextSibling);
-    // @ts-ignore: canvas exist on QrScanner
-    // qrScanner.$canvas.style.transform = 'scaleX(-1)';
   }, [qrScanner]);
 
   const handleClick = React.useCallback(() => {
@@ -111,7 +113,7 @@ function CameraCard(props: Props): JSX.Element {
       </CardContent>
       <div className={classes.borders}>
         <CardMedia component='video' ref={cameraRef} className={classes.video} />
-        {availableCameras.length > 0 &&
+        {availableCameras.length > 1 &&
           <FlipCameraIosIcon onClick={handleClick} className={classes.cameraFlip} />}
       </div>
     </Card>
