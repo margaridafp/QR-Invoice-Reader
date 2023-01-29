@@ -49,17 +49,20 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
   devServer: {
-    contentBase: path.join(__dirname, 'build'),
-    host: '0.0.0.0',
+    static: {
+      directory: path.join(__dirname, 'build'),
+    },
     port: 3000,
     open: true,
-    openPage: 'http://localhost:3000',
-    stats: 'errors-only',
-    overlay: {
-      warnings: true,
-      errors: true,
+    devMiddleware: {
+      stats: 'errors-only',
     },
-    noInfo: true,
+    client: {
+      overlay: {
+        warnings: true,
+        errors: true,
+      },
+    }
   },
   // add a custom index.html as the template
   plugins: [
