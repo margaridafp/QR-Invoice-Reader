@@ -1,17 +1,16 @@
-import {makeStyles} from '@material-ui/core';
+import {styled} from '@mui/system';
 
-export const styles = makeStyles({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  card: {
-    backgroundColor: 'white',
-    borderRadius: '0px',
-    width: 'fit-content',
-    boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 12px',
-  },
+export const cardStyles = {
+  backgroundColor: 'white',
+  borderRadius: '0px',
+  width: 'fit-content',
+  boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 12px',
+};
+
+export const BoxStyled = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  justifyContent: 'center',
+  alignItems: 'center',
 });

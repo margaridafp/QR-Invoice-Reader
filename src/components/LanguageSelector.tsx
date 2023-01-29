@@ -1,45 +1,12 @@
 import {
   FormControl,
-  Icon,
-  makeStyles,
   MenuItem,
   Select,
-  Typography,
-} from '@material-ui/core';
+  Typography} from '@mui/material';
 import ptFlag from 'flag-icon-css/flags/4x3/pt.svg';
 import enFlag from 'flag-icon-css/flags/4x3/us.svg';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    float: 'right',
-    marginRight: '5px',
-  },
-  selectMenu: {
-    'display': 'flex',
-    'flexDirection': 'row',
-    'fontSize': '0.5rem',
-
-  },
-  menuItem: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  iconFlag: {
-    fontSize: '1rem',
-    marginRight: '5px',
-  },
-  image: {
-    height: 'inherit',
-  },
-  selectRoot: {
-    '&:after': {
-      borderRadius: '0px',
-    },
-  },
-}));
 
 const AVAILABLE_FLAGS: {[id: string]:{flag:string, name:string}} = {
   pt: {flag: ptFlag, name: 'Português'},
@@ -47,7 +14,6 @@ const AVAILABLE_FLAGS: {[id: string]:{flag:string, name:string}} = {
 };
 
 function LanguageSelector(): JSX.Element {
-  const classes = useStyles();
   const {i18n} = useTranslation();
   const [lang, setLang] = React.useState();
 
@@ -62,29 +28,44 @@ function LanguageSelector(): JSX.Element {
 
   return (
     <FormControl
-      className={classes.root}
+      sx={{
+        marginLeft: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+      }}
     >
       <Select
         key= {lang}
-        classes={{
-          root: classes.selectRoot,
-          select: classes.selectMenu}}
-        disableUnderline
+        sx={{
+          'float': 'right',
+          'marginRight': '5px',
+          '.MuiOutlinedInput-notchedOutline': {border: 'none'},
+          '.MuiOutlinedInput-input': {
+            'display': 'flex',
+            'alignItems': 'center',
+            'gap': '5px',
+          },
+        }}
+        variant='outlined'
         value={lang}
         defaultValue={currentLang}
         onChange={languageHandler}
       >
         {Object.keys(AVAILABLE_FLAGS).map((f) =>
           <MenuItem
-            className={classes.menuItem}
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: '5px',
+            }}
             key={f}
             value={f}
           >
-            <Icon className={classes.iconFlag}>
-              <img src={AVAILABLE_FLAGS[f].flag}
-                className={classes.image}
-              />
-            </Icon>
+            <img src={AVAILABLE_FLAGS[f].flag}
+            />
             <Typography variant='caption'>{AVAILABLE_FLAGS[f].name}</Typography>
           </MenuItem>)}
 

@@ -1,8 +1,8 @@
 /* eslint-disable no-multi-str */
-import {Card, CardContent, CardMedia, Typography} from '@material-ui/core';
-import {makeStyles} from '@material-ui/core';
-import FlipCameraIosIcon from '@material-ui/icons/FlipCameraIos';
-import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
+import FlipCameraIosIcon from '@mui/icons-material/FlipCameraIos';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import {Card, CardContent, CardMedia, Typography} from '@mui/material';
+import {styled} from '@mui/system';
 import QrScanner from 'qr-scanner';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
@@ -10,12 +10,11 @@ import {useTranslation} from 'react-i18next';
 // @ts-ignore: implicit any
 import QrScannerWorkerPath from '!!file-loader!../../../node_modules/qr-scanner/qr-scanner-worker.min.js';
 
-import {styles} from '../styles';
+import {cardStyles} from '../styles';
 
-const useStyles = makeStyles(() => ({
-  borders: {
-    margin: '0px 1em 1em 1em',
-    background:
+export const CardMediaWrapper = styled('div')({
+  margin: '0px 1em 1em 1em',
+  background:
       'linear-gradient(to right, #3C403D 4px, transparent 4px) 0 0,\
     linear-gradient(to right, #3C403D 4px, transparent 4px) 0 100%,\
     linear-gradient(to left, #3C403D 4px, transparent 4px) 100% 0,\
@@ -24,40 +23,21 @@ const useStyles = makeStyles(() => ({
     linear-gradient(to bottom, #3C403D 4px, transparent 4px) 100% 0,\
     linear-gradient(to top, #3C403D 4px, transparent 4px) 0 100%,\
     linear-gradient(to top, #3C403D 4px, transparent 4px) 100% 100%',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: '20px 20px',
-    position: 'relative',
-    height: '319px',
-    width: '316px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  video: {
-    width: '100%',
-    display: 'none',
-    aspectRatio: 'auto 400 / 400',
-  },
-  content: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  cameraFlip: {
-    color: 'white',
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-  },
-}));
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: '20px 20px',
+  position: 'relative',
+  height: '319px',
+  width: '316px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+});
 
-type Props = {
-  onGetResponse: (response: string) => void
+interface CameraCardProps {
+  handleResponse: (response: string) => void
 }
 
-function CameraCard(props: Props): JSX.Element {
-  const classes = useStyles();
-  const mainClasses = styles();
+function CameraCard({handleResponse}: CameraCardProps): JSX.Element {
   const cameraRef = React.useRef<HTMLVideoElement>(null);
   const [qrResponse, setQrResponse] = React.useState('');
   const [qrScanner, setQrScanner] = React.useState<QrScanner | null>(null);
@@ -69,11 +49,11 @@ function CameraCard(props: Props): JSX.Element {
 
   // Get response
   React.useEffect(() => {
-    props.onGetResponse(qrResponse);
+    handleResponse(qrResponse);
     if (qrScanner) {
       qrScanner.stop();
     }
-  }, [qrResponse, props, qrScanner]);
+  }, [qrResponse, handleResponse, qrScanner]);
 
   // Set Scanner
   React.useEffect(() => {
@@ -125,18 +105,36 @@ function CameraCard(props: Props): JSX.Element {
   }, [facingMode, qrScanner]);
 
   return (
-    <Card className={mainClasses.card}>
-      <CardContent className={classes.content}>
+    <Card sx={cardStyles}>
+      <CardContent sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}>
         <PhotoCameraIcon />
         <Typography variant='body1' color="primary" gutterBottom>
           {t('Start scanning')}
         </Typography>
       </CardContent>
-      <div className={classes.borders}>
-        <CardMedia component='video' ref={cameraRef} className={classes.video} />
+      <CardMediaWrapper>
+        <CardMedia
+          component='video'
+          ref={cameraRef}
+          sx={{
+            width: '100%',
+            display: 'none',
+            aspectRatio: 'auto 400 / 400',
+          }} />
         {availableCameras.length > 1 &&
-          <FlipCameraIosIcon onClick={handleClick} className={classes.cameraFlip} />}
-      </div>
+          <FlipCameraIosIcon
+            onClick={handleClick}
+            sx={{
+              color: 'white',
+              position: 'absolute',
+              bottom: 20,
+              right: 20,
+            }} />}
+      </CardMediaWrapper>
     </Card>
   );
 }

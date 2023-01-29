@@ -1,19 +1,17 @@
 import React from 'react';
 
-import {styles} from '../styles';
+import {BoxStyled} from '../styles';
 import CameraCard from './CameraCard';
 
-type Props = {
-  onGetResponse: (response: string) => void
+interface ScanProps {
+  handleResponse: (response: string) => void
 }
 
-function Scan(props: Props): JSX.Element {
-  const mainClasses = styles();
-
+function Scan({handleResponse}: ScanProps): JSX.Element {
   return (
-    <div className={mainClasses.root}>
-      <CameraCard onGetResponse={props.onGetResponse}/>
-    </div>
+    <BoxStyled>
+      <CameraCard handleResponse={handleResponse}/>
+    </BoxStyled>
   );
 }
 

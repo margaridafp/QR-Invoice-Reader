@@ -1,30 +1,25 @@
-import {Button} from '@material-ui/core';
-import {Card, CardContent, Typography} from '@material-ui/core';
-import {makeStyles} from '@material-ui/core';
+import {Card, CardContent, Typography} from '@mui/material';
+import {styled} from '@mui/system';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 
 import {keys} from '../../constants';
-import {styles} from '../styles';
+import {BoxStyled, cardStyles} from '../styles';
 
-const useStyles = makeStyles(()=> ({
-  text: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-}));
+export const ResultWrapper = styled('div')({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: '5px',
+});
 
-type Props = {
-    response: string,
-    onGetResponse: (response: string | null) => void
+interface ResultProps {
+  response: string;
 }
 
-function Result(props: Props): JSX.Element {
+function Result({response}: ResultProps): JSX.Element {
   const {t} = useTranslation();
-  const classes = useStyles();
-  const mainClasses = styles();
-  const responses = props.response.split(keys.separator);
+  const responses = response.split(keys.separator);
 
   // Get object from response
   const respObj = responses.reduce(function(obj: { [key: string]: string}, resp) {
@@ -38,23 +33,20 @@ function Result(props: Props): JSX.Element {
   }, {});
 
   return (
-    <>
-      <Button onClick={()=>props.onGetResponse(null)}>{'\u2329'} {t('Back')}</Button>
-      <div className={mainClasses.root}>
-        <Card className={mainClasses.card}>
-          <CardContent>
-            {Object.keys(respObj).map((key, idx)=> {
-              return (
-                <div key={idx} className={classes.text}>
-                  <Typography variant='subtitle1'>{key}: </Typography>
-                  <Typography variant='subtitle2'> {respObj[key]}</Typography>
-                </div>
-              );
-            })}
-          </CardContent>
-        </Card>
-      </div>
-    </>
+    <BoxStyled>
+      <Card sx={cardStyles}>
+        <CardContent>
+          {Object.keys(respObj).map((key, idx)=> {
+            return (
+              <ResultWrapper key={idx}>
+                <Typography variant='subtitle1'>{key}: </Typography>
+                <Typography variant='subtitle2'> {respObj[key]}</Typography>
+              </ResultWrapper>
+            );
+          })}
+        </CardContent>
+      </Card>
+    </BoxStyled>
   );
 }
 

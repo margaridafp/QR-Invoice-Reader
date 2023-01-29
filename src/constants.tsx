@@ -1,5 +1,5 @@
-import {createMuiTheme} from '@material-ui/core';
-import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
+import {createTheme} from '@mui/material';
+import {createBreakpoints} from '@mui/system';
 
 export const fontsConfig = {
   family: 'Arial',
@@ -25,7 +25,7 @@ const breakpointValues= {
 
 const breakpoints = createBreakpoints({values: breakpointValues});
 
-export const theme = createMuiTheme({
+export const theme = createTheme({
   breakpoints: {
     values: breakpointValues,
   },
