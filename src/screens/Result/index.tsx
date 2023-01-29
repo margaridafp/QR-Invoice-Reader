@@ -38,10 +38,7 @@ function Result({response}: ResultProps): JSX.Element {
         <CardContent>
           {Object.keys(respObj).map((key, idx)=> {
             return (
-              <ResultWrapper key={idx}>
-                <Typography variant='subtitle1'>{key}: </Typography>
-                <Typography variant='subtitle2'> {respObj[key]}</Typography>
-              </ResultWrapper>
+              <Typography key={idx} variant='subtitle2'><strong>{key}:</strong> {respObj[key]}</Typography>
             );
           })}
         </CardContent>
