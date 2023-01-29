@@ -2,26 +2,32 @@ import {
   FormControl,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Typography} from '@mui/material';
-import ptFlag from 'flag-icon-css/flags/4x3/pt.svg';
-import enFlag from 'flag-icon-css/flags/4x3/us.svg';
-import React from 'react';
+import React, {ReactNode, useEffect, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 
-const AVAILABLE_FLAGS: {[id: string]:{flag:string, name:string}} = {
-  pt: {flag: ptFlag, name: 'Português'},
-  en: {flag: enFlag, name: 'English'},
+import {PtFlagIcon, UsFlagIcon} from '../assets';
+
+const AVAILABLE_FLAGS: {[id: string]:{flag:ReactNode, name:string}} = {
+  pt: {flag: <PtFlagIcon width='20'/>, name: 'Português'},
+  en: {flag: <UsFlagIcon width='20'/>, name: 'English'},
 };
 
 function LanguageSelector(): JSX.Element {
   const {i18n} = useTranslation();
-  const [lang, setLang] = React.useState();
+  const [lang, setLang] = React.useState<string>();
 
-  const currentLang= i18n.languages.find((l) =>
-    Object.keys(AVAILABLE_FLAGS).includes(l));
+  const currentLang = useMemo(() => {
+    return i18n.languages.find((l) =>
+      Object.keys(AVAILABLE_FLAGS).includes(l));
+  }, [i18n.languages]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const languageHandler = React.useCallback((event:any) => {
+  useEffect(() => {
+    setLang(currentLang);
+  }, [currentLang]);
+
+  const languageHandler = React.useCallback((event:SelectChangeEvent<string>) => {
     setLang(event.target.value);
     i18n.changeLanguage(event.target.value);
   }, [i18n]);
@@ -64,8 +70,7 @@ function LanguageSelector(): JSX.Element {
             key={f}
             value={f}
           >
-            <img src={AVAILABLE_FLAGS[f].flag}
-            />
+            {AVAILABLE_FLAGS[f].flag}
             <Typography variant='caption'>{AVAILABLE_FLAGS[f].name}</Typography>
           </MenuItem>)}
 
