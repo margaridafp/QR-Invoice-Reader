@@ -2,14 +2,14 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: node:15.5.1-alpine3.10
+    container: node:16.14-alpine3.15
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -26,6 +26,10 @@ jobs:
         path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
         key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
 
+    - name: Setup Pages
+      id: pages
+      uses: actions/configure-pages@v3
+      
     # `--prefer-offline` gives cache priority
     # tar package is needed for caching since actions/cache needs non-busybox version
     - name: Install dependencies
@@ -35,10 +39,20 @@ jobs:
     - name: Build
       run: yarn build
     - name: Upload build
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-pages-artifact@v1
       with:
-        name: build-package
-        path: |
-          build
-        retention-days: 5
-        if-no-files-found: error
+        path: 'build'
+
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
